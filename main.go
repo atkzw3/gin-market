@@ -25,6 +25,7 @@ func main() {
 	ic := controllers.NewItemController(is)
 
 	r := gin.Default()
-	r.GET("/itemss", ic.GetAll)
+	r.GET("/items", ic.GetAll)
+	r.GET("/items/:id", ic.FindById)
 	r.Run("localhost:8080") // 0.0.0.0:8080 でサーバーを立てます。
 }

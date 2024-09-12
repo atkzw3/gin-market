@@ -13,6 +13,7 @@ type IItemController interface {
 	GetAll(ctx *gin.Context)
 	FindById(ctx *gin.Context)
 	Create(ctx *gin.Context)
+	Update(ctx *gin.Context)
 }
 type ItemController struct {
 	service services.IItemService
@@ -74,4 +75,25 @@ func (ic *ItemController) Create(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Unexpected error"})
 	}
 	ctx.JSON(http.StatusCreated, gin.H{"data": newItem})
+}
+
+func (ic *ItemController) Update(ctx *gin.Context) {
+	var input dto.UpdateItemInput
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		fmt.Println("ShouldBindJSON エラー発生", err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid id"})
+	}
+
+	fmt.Println("id:", uint(id))
+
+	updatedItem, err := ic.service.Update(uint(id), input)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Unexpected error"})
+	}
+	ctx.JSON(http.StatusOK, gin.H{"data": updatedItem})
 }

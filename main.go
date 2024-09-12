@@ -27,5 +27,6 @@ func main() {
 	r := gin.Default()
 	r.GET("/items", ic.GetAll)
 	r.GET("/items/:id", ic.FindById)
+	r.POST("/items", ic.Create)
 	r.Run("localhost:8080") // 0.0.0.0:8080 でサーバーを立てます。
 }

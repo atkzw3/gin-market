@@ -29,5 +29,6 @@ func main() {
 	r.GET("/items/:id", ic.FindById)
 	r.POST("/items", ic.Create)
 	r.PUT("/items/:id", ic.Update)
+	r.DELETE("/items/:id", ic.Delete)
 	r.Run("localhost:8080") // 0.0.0.0:8080 でサーバーを立てます。
 }

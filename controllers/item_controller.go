@@ -14,6 +14,7 @@ type IItemController interface {
 	FindById(ctx *gin.Context)
 	Create(ctx *gin.Context)
 	Update(ctx *gin.Context)
+	Delete(ctx *gin.Context)
 }
 type ItemController struct {
 	service services.IItemService
@@ -96,4 +97,19 @@ func (ic *ItemController) Update(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Unexpected error"})
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": updatedItem})
+}
+
+func (ic *ItemController) Delete(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid id"})
+	}
+
+	fmt.Println("id:", uint(id))
+
+	err2 := ic.service.Delete(uint(id))
+	if err2 != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Unexpected error"})
+	}
+	ctx.JSON(http.StatusOK, gin.H{})
 }

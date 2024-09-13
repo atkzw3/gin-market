@@ -3,3 +3,6 @@
 # air があれば毎回 go run main.goを叩く必要なく、発火させる必要もない
 air:
 	air
+
+up:
+	docker-compose up -d

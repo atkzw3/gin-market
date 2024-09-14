@@ -2,10 +2,13 @@ package main
 
 import (
 	"gin-market/controllers"
+	"gin-market/infra"
 	"gin-market/models"
 	"gin-market/repositories"
 	"gin-market/services"
 	"github.com/gin-gonic/gin"
+	"log"
+	"os"
 )
 
 // https://gin-gonic.com/ja/docs/quickstart/
@@ -13,6 +16,8 @@ import (
 // air パッケージでホットリロード
 // https://github.com/air-verse/air
 func main() {
+	infra.Initialize()
+	log.Println(os.Getenv("ENV"))
 
 	items := []models.Item{
 		{ID: 1, Name: "商品1", Price: 1000, Description: "説明1", SoldOut: false},

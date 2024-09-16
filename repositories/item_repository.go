@@ -65,14 +65,22 @@ type ItemRepository struct {
 	db *gorm.DB
 }
 
-func (i ItemRepository) GetAll() (*[]models.Item, error) {
-	//TODO implement me
-	panic("implement me")
+func (i *ItemRepository) GetAll() (*[]models.Item, error) {
+	var items []models.Item
+	r := i.db.Find(&items)
+	if r.Error != nil {
+		return nil, r.Error
+	}
+	return &items, r.Error
 }
 
-func (i ItemRepository) FindById(id uint) (*models.Item, error) {
-	//TODO implement me
-	panic("implement me")
+func (i *ItemRepository) FindById(id uint) (*models.Item, error) {
+	var item models.Item
+	r := i.db.First(&item, id)
+	if r.Error != nil {
+		return nil, r.Error
+	}
+	return &item, nil
 }
 
 func (i *ItemRepository) Create(newItem models.Item) (*models.Item, error) {

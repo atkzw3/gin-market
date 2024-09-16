@@ -100,9 +100,12 @@ func (i *ItemRepository) Update(updateItem models.Item) (*models.Item, error) {
 	return &updateItem, nil
 }
 
-func (i ItemRepository) Delete(deleteItem models.Item) error {
-	//TODO implement me
-	panic("implement me")
+func (i *ItemRepository) Delete(deleteItem models.Item) error {
+	r := i.db.Delete(&deleteItem)
+	if r.Error != nil {
+		return r.Error
+	}
+	return nil
 }
 
 func NewDBItemRepository(db *gorm.DB) IItemRepository {

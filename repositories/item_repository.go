@@ -92,9 +92,12 @@ func (i *ItemRepository) Create(newItem models.Item) (*models.Item, error) {
 	return &newItem, nil
 }
 
-func (i ItemRepository) Update(updateItem models.Item) (*models.Item, error) {
-	//TODO implement me
-	panic("implement me")
+func (i *ItemRepository) Update(updateItem models.Item) (*models.Item, error) {
+	r := i.db.Save(&updateItem)
+	if r.Error != nil {
+		return nil, r.Error
+	}
+	return &updateItem, nil
 }
 
 func (i ItemRepository) Delete(deleteItem models.Item) error {

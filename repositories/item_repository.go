@@ -3,6 +3,7 @@ package repositories
 import (
 	"errors"
 	"gin-market/models"
+	"gorm.io/gorm"
 )
 
 type IItemRepository interface {
@@ -58,4 +59,41 @@ func (r *ItemRepositoryImpl) Delete(deleteItem models.Item) error {
 		}
 	}
 	return errors.New("item not found")
+}
+
+type ItemRepository struct {
+	db *gorm.DB
+}
+
+func (i ItemRepository) GetAll() (*[]models.Item, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (i ItemRepository) FindById(id uint) (*models.Item, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (i *ItemRepository) Create(newItem models.Item) (*models.Item, error) {
+	r := i.db.Create(&newItem)
+	// gormの場合、返り値にerrorが含まれる
+	if r.Error != nil {
+		return nil, r.Error
+	}
+	return &newItem, nil
+}
+
+func (i ItemRepository) Update(updateItem models.Item) (*models.Item, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (i ItemRepository) Delete(deleteItem models.Item) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func NewDBItemRepository(db *gorm.DB) IItemRepository {
+	return &ItemRepository{db: db}
 }

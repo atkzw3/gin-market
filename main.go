@@ -31,10 +31,13 @@ func main() {
 	ic := controllers.NewItemController(is)
 
 	r := gin.Default()
-	r.GET("/items", ic.GetAll)
-	r.GET("/items/:id", ic.FindById)
-	r.POST("/items", ic.Create)
-	r.PUT("/items/:id", ic.Update)
-	r.DELETE("/items/:id", ic.Delete)
+	itemR := r.Group("/items")
+
+	itemR.GET("/", ic.GetAll)
+	itemR.GET("/:id", ic.FindById)
+	itemR.POST("/", ic.Create)
+	itemR.PUT("/:id", ic.Update)
+	itemR.DELETE("/:id", ic.Delete)
+
 	r.Run("localhost:8080") // 0.0.0.0:8080 でサーバーを立てます。
 }

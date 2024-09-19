@@ -30,14 +30,21 @@ func main() {
 	is := services.NewItemService(ir)
 	ic := controllers.NewItemController(is)
 
+	authRepo := repositories.NewAuthRepository(db)
+	authService := services.NewAuthService(authRepo)
+	authController := controllers.NewAuthController(authService)
+
 	r := gin.Default()
 	itemR := r.Group("/items")
+	authR := r.Group("/auth")
 
 	itemR.GET("/", ic.GetAll)
 	itemR.GET("/:id", ic.FindById)
 	itemR.POST("/", ic.Create)
 	itemR.PUT("/:id", ic.Update)
 	itemR.DELETE("/:id", ic.Delete)
+
+	authR.POST("/signup", authController.SignUp)
 
 	r.Run("localhost:8080") // 0.0.0.0:8080 でサーバーを立てます。
 }

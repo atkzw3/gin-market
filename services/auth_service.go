@@ -3,7 +3,10 @@ package services
 import (
 	"gin-market/models"
 	"gin-market/repositories"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
+	"os"
+	"time"
 )
 
 type IAuthService interface {
@@ -43,5 +46,27 @@ func (a *AuthService) Login(email string, password string) (*string, error) {
 		return nil, err
 	}
 
-	return &user.Email, nil
+	token, err := CreateToken(user.ID, user.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	return token, nil
+}
+
+func CreateToken(userId uint, email string) (*string, error) {
+	// jwtにおけるクレームは様々なユーザー情報を入れる
+	// https://github.com/golang-jwt/jwt?tab=readme-ov-file#installation-guidelines
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"sub":   userId,
+		"email": email,
+		"exp":   time.Now().Add(time.Hour).Unix(),
+	})
+
+	// envのsecret key は openssl rand -hex 32 でランダムな値を生成している
+	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
+	if err != nil {
+		return nil, err
+	}
+	return &tokenString, nil
 }

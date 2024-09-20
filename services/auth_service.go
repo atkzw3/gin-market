@@ -68,5 +68,9 @@ func CreateToken(userId uint, email string) (*string, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// jwt 仕組みについて
+	// https://jwt.io/
+
 	return &tokenString, nil
 }

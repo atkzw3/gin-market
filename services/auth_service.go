@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"gin-market/models"
 	"gin-market/repositories"
 	"github.com/golang-jwt/jwt/v5"
@@ -12,6 +13,7 @@ import (
 type IAuthService interface {
 	SignUp(email string, password string) error
 	Login(email string, password string) (*string, error)
+	GetByToken(token string) (*models.User, error)
 }
 
 type AuthService struct {
@@ -73,4 +75,29 @@ func CreateToken(userId uint, email string) (*string, error) {
 	// https://jwt.io/
 
 	return &tokenString, nil
+}
+
+func (a *AuthService) GetByToken(tokenString string) (*models.User, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(os.Getenv("SECRET_KEY")), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	var user *models.User
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		// 有効期限確認
+		if float64(time.Now().Unix()) > claims["exp"].(float64) {
+			return nil, jwt.ErrTokenExpired
+		}
+		user, err = a.r.FindByEmail(claims["email"].(string))
+		if err != nil {
+			return nil, err
+		}
+	}
+	return user, nil
 }

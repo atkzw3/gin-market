@@ -7,6 +7,7 @@ import (
 
 type IAuthRepository interface {
 	CreateUser(user models.User) error
+	FindByEmail(email string) (*models.User, error)
 }
 
 type AuthRepository struct {
@@ -23,4 +24,13 @@ func (r *AuthRepository) CreateUser(user models.User) error {
 		return result.Error
 	}
 	return nil
+}
+
+func (r *AuthRepository) FindByEmail(email string) (*models.User, error) {
+	var user models.User
+	result := r.db.First(&user, "email = ?", email)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &user, nil
 }

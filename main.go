@@ -45,6 +45,7 @@ func main() {
 	itemR.DELETE("/:id", ic.Delete)
 
 	authR.POST("/signup", authController.SignUp)
+	authR.POST("/login", authController.Login)
 
 	r.Run("localhost:8080") // 0.0.0.0:8080 でサーバーを立てます。
 }

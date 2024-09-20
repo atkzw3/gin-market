@@ -9,6 +9,7 @@ import (
 
 type IAuthController interface {
 	SignUp(ctx *gin.Context)
+	Login(ctx *gin.Context)
 }
 
 type AuthController struct {
@@ -31,4 +32,18 @@ func (authController *AuthController) SignUp(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "failed sign up"})
 	}
 	ctx.Status(http.StatusCreated)
+}
+
+func (authController *AuthController) Login(ctx *gin.Context) {
+	var input dto.LoginInput
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	token, err := authController.service.Login(input.Email, input.Password)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "failed login"})
+	}
+	ctx.JSON(http.StatusOK, gin.H{"token": token})
 }

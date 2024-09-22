@@ -6,6 +6,7 @@ import (
 	"gin-market/middlewares"
 	"gin-market/repositories"
 	"gin-market/services"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
 	"os"
@@ -36,6 +37,9 @@ func main() {
 	authController := controllers.NewAuthController(authService)
 
 	r := gin.Default()
+	// https://github.com/gin-contrib/cors
+	// 一旦デフォルトで全て許可。案件に応じて変更
+	r.Use(cors.Default())
 	itemR := r.Group("/items")
 	itemWithAuth := r.Group("/items", middlewares.AuthMiddleware(authService))
 	authR := r.Group("/auth")

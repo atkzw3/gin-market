@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"gin-market/dto"
+	"gin-market/models"
 	"gin-market/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -50,6 +51,15 @@ func (ic *ItemController) FindById(ctx *gin.Context) {
 }
 
 func (ic *ItemController) Create(ctx *gin.Context) {
+	// middlewareからuser keyを取得
+	user, exists := ctx.Get("user")
+	if !exists {
+		ctx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	userId := user.(*models.User).ID
+
 	var input dto.CreateItemInput
 
 	/*
@@ -70,7 +80,7 @@ func (ic *ItemController) Create(ctx *gin.Context) {
 		return
 	}
 
-	newItem, err := ic.service.Create(input)
+	newItem, err := ic.service.Create(input, userId)
 	if err != nil {
 		fmt.Println("createエラー発生", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Unexpected error"})

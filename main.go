@@ -3,6 +3,7 @@ package main
 import (
 	"gin-market/controllers"
 	"gin-market/infra"
+	"gin-market/middlewares"
 	"gin-market/repositories"
 	"gin-market/services"
 	"github.com/gin-gonic/gin"
@@ -36,11 +37,12 @@ func main() {
 
 	r := gin.Default()
 	itemR := r.Group("/items")
+	itemWithAuth := r.Group("/items", middlewares.AuthMiddleware(authService))
 	authR := r.Group("/auth")
 
 	itemR.GET("/", ic.GetAll)
 	itemR.GET("/:id", ic.FindById)
-	itemR.POST("/", ic.Create)
+	itemWithAuth.POST("", ic.Create)
 	itemR.PUT("/:id", ic.Update)
 	itemR.DELETE("/:id", ic.Delete)
 

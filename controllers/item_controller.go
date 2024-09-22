@@ -36,6 +36,13 @@ func (ic *ItemController) GetAll(ctx *gin.Context) {
 }
 
 func (ic *ItemController) FindById(ctx *gin.Context) {
+	_, exists := ctx.Get("user")
+	if !exists {
+		ctx.AbortWithStatus(http.StatusUnauthorized)
+		fmt.Println("FindById StatusUnauthorized error")
+		return
+	}
+
 	// パスパラメーターはstring型なので、uint変換
 	id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 	if err != nil {
@@ -89,6 +96,13 @@ func (ic *ItemController) Create(ctx *gin.Context) {
 }
 
 func (ic *ItemController) Update(ctx *gin.Context) {
+	_, exists := ctx.Get("user")
+	if !exists {
+		ctx.AbortWithStatus(http.StatusUnauthorized)
+		fmt.Println("update StatusUnauthorized error")
+		return
+	}
+
 	var input dto.UpdateItemInput
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		fmt.Println("ShouldBindJSON エラー発生", err)
@@ -110,6 +124,13 @@ func (ic *ItemController) Update(ctx *gin.Context) {
 }
 
 func (ic *ItemController) Delete(ctx *gin.Context) {
+	_, exists := ctx.Get("user")
+	if !exists {
+		ctx.AbortWithStatus(http.StatusUnauthorized)
+		fmt.Println("Delete StatusUnauthorized error")
+		return
+	}
+
 	id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid id"})

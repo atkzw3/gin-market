@@ -41,10 +41,10 @@ func main() {
 	authR := r.Group("/auth")
 
 	itemR.GET("/", ic.GetAll)
-	itemR.GET("/:id", ic.FindById)
+	itemWithAuth.GET("/:id", ic.FindById)
 	itemWithAuth.POST("", ic.Create)
-	itemR.PUT("/:id", ic.Update)
-	itemR.DELETE("/:id", ic.Delete)
+	itemWithAuth.PUT("/:id", ic.Update)
+	itemWithAuth.DELETE("/:id", ic.Delete)
 
 	authR.POST("/signup", authController.SignUp)
 	authR.POST("/login", authController.Login)

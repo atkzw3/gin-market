@@ -41,7 +41,7 @@ func setupRouter(db *gorm.DB) *gin.Engine {
 	itemWithAuth := r.Group("/items", middlewares.AuthMiddleware(authService))
 	authR := r.Group("/auth")
 
-	itemR.GET("/", ic.GetAll)
+	itemR.GET("", ic.GetAll)
 	itemWithAuth.GET("/:id", ic.FindById)
 	itemWithAuth.POST("", ic.Create)
 	itemWithAuth.PUT("/:id", ic.Update)

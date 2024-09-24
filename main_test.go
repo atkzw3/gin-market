@@ -1,12 +1,16 @@
 package main
 
 import (
+	"encoding/json"
 	"gin-market/infra"
 	"gin-market/models"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 	"log"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 )
@@ -49,4 +53,24 @@ func setup() *gin.Engine {
 
 	router := setupRouter(db)
 	return router
+}
+
+func TestGetAll(t *testing.T) {
+	router := setup()
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/items", nil)
+
+	// APIリクエスト実行
+	router.ServeHTTP(w, req)
+
+	// 実行結果取得
+	var res map[string][]models.Item
+	json.Unmarshal([]byte(w.Body.String()), &res)
+
+	// アサーション
+	assert.Equal(t, http.StatusOK, w.Code)
+
+	// body
+	assert.Equal(t, 3, len(res["data"]))
 }

@@ -34,7 +34,6 @@ func (a *AuthService) SignUp(email string, password string) error {
 		Email:    email,
 		Password: string(hashP),
 	}
-
 	return a.r.CreateUser(user)
 }
 

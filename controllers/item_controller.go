@@ -36,12 +36,12 @@ func (ic *ItemController) GetAll(ctx *gin.Context) {
 }
 
 func (ic *ItemController) FindById(ctx *gin.Context) {
-	_, exists := ctx.Get("user")
-	if !exists {
-		ctx.AbortWithStatus(http.StatusUnauthorized)
-		fmt.Println("FindById StatusUnauthorized error")
-		return
-	}
+	//_, exists := ctx.Get("user")
+	//if !exists {
+	//	ctx.AbortWithStatus(http.StatusUnauthorized)
+	//	fmt.Println("FindById StatusUnauthorized error")
+	//	return
+	//}
 
 	// パスパラメーターはstring型なので、uint変換
 	id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)

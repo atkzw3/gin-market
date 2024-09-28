@@ -21,7 +21,7 @@ func SetupDB() *gorm.DB {
 		os.Getenv("DB_PASSWORD"),
 	)
 
-	if env == "prod" {
+	if env == "prod" || env == "local" {
 		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		log.Println("set up postgres connection")
 		if err != nil {

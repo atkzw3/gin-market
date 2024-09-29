@@ -5,11 +5,13 @@ import (
 	"gin-market/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type IAuthController interface {
 	SignUp(ctx *gin.Context)
 	Login(ctx *gin.Context)
+	GetById(ctx *gin.Context)
 }
 
 type AuthController struct {
@@ -46,4 +48,17 @@ func (authController *AuthController) Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "failed login"})
 	}
 	ctx.JSON(http.StatusOK, gin.H{"token": token})
+}
+
+func (authController *AuthController) GetById(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	user, err := authController.service.GetById(uint(id))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	ctx.JSON(http.StatusOK, gin.H{"user": user})
 }

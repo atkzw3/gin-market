@@ -14,6 +14,7 @@ type IAuthService interface {
 	SignUp(email string, password string) error
 	Login(email string, password string) (*string, error)
 	GetByToken(token string) (*models.User, error)
+	GetById(id uint) (*models.User, error)
 }
 
 type AuthService struct {
@@ -97,6 +98,14 @@ func (a *AuthService) GetByToken(tokenString string) (*models.User, error) {
 		if err != nil {
 			return nil, err
 		}
+	}
+	return user, nil
+}
+
+func (a *AuthService) GetById(id uint) (*models.User, error) {
+	user, err := a.r.GetById(id)
+	if err != nil {
+		return nil, err
 	}
 	return user, nil
 }

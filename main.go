@@ -39,6 +39,7 @@ func setupRouter(db *gorm.DB) *gin.Engine {
 
 	authR.POST("/signup", authController.SignUp)
 	authR.POST("/login", authController.Login)
+	authR.GET("/:id", authController.GetById)
 
 	return r
 }

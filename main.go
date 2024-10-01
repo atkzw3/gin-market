@@ -3,6 +3,7 @@ package main
 import (
 	"gin-market/controllers"
 	"gin-market/infra"
+	"gin-market/middlewares"
 	"gin-market/repositories"
 	"gin-market/routers"
 	"gin-market/services"
@@ -37,9 +38,11 @@ func setupRouter(db *gorm.DB) *gin.Engine {
 	r.Use(cors.Default())
 	authR := r.Group("/auth")
 
+	authWithMiddleware := r.Group("/auth-search", middlewares.BlockSpecifyUserBlockMiddleware(authService))
+
 	authR.POST("/signup", authController.SignUp)
 	authR.POST("/login", authController.Login)
-	authR.GET("/:id", authController.GetById)
+	authWithMiddleware.GET("/:id", authController.GetById)
 
 	return r
 }
